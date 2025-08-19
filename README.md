@@ -13,4 +13,10 @@ tree project
 ```
 
 **Output:**  
-![task1](/home/abdu/Pictures/Screenshots/1.png)
+![task1](./Screenshots/1.png)
+
+
+## Setup environment and repo 
+
+**Output:**  
+![task1](./Screenshots/2.png)
