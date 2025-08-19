@@ -270,7 +270,7 @@ sudo ufw status
 
 `Rationale`: Weak passwords are a primary vector for compromise. Enforcing a strong policy makes brute-forcing passwords computationally infeasible. Additionally, running mysql_secure_installation removes insecure default settings.
 
-- I use PAM (Pluggable Authentication Module) to enforce rules
+- I used PAM (Pluggable Authentication Module) to enforce rules
 
 **3.1 install password quality tools:**
 ```bash
@@ -295,7 +295,7 @@ sudo passwd student_user
 ![task1](./Screenshots/14.png)
 
 
-### 4. Secure MySQL
+### 4. Secure MySQL Server
 
 After installation, the MySQL server instance on my machine is insecure and susceptible to attacks. mysql_secure_installation is a shell script developed for securing the MySQL server installation on Unix systems. The script configures security settings and allows you to:
 
@@ -314,7 +314,7 @@ sudo mysql_secure_installation
 ![task1](./Screenshots/15.png)
 
 
-#### 4.1 Securing the student_user Account
+### 4.1 Securing the student_user Account
 
 - Log in to the MySQL shell as root
 - Create the user with a strong password
@@ -333,4 +333,20 @@ EXIT;
 ```
 **Output:** 
 ![task1](./Screenshots/16.png)
+
+### 4.2. Verification (Testing)
+
+1.Test that the new student_user2 password works:
+
+**Output:** 
+![task1](./Screenshots/17.png)
+
+
+**2. Test that a weak password is rejected (if VALIDATE PASSWORD is active):**
+
+**Output:** 
+![task1](./Screenshots/18.png)
+
+**It's work Alhamdulallah**
+
 
