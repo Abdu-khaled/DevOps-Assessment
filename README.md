@@ -105,7 +105,6 @@ docker run -d --name mynginx -p 8080:80  nginx
 ```bash
 #!/bin/bash
 
-
 SOURCE_DIR=$1
 DEST_DIR=$2
 BACKUP_NAME="$(basename "$SOURCE_DIR").tar.gz"
@@ -135,4 +134,51 @@ tar -czf "$DEST_DIR/$BACKUP_NAME" -C "$(dirname "$SOURCE_DIR")" "$(basename "$SO
 
 echo "Backup of '$SOURCE_DIR' created at '$DEST_DIR/$BACKUP_NAME'"
 ```
+
+**Output:** test script  
+![task1](./Screenshots/7.png)
+
+
+## Task 5: Database Container Setup
+
+- `Objective`: Set up a containerized database with security.
+
+**Steps**
+1. Create PostgreSQL container bind to localhost only.
+
+**Command:**
+```bash
+docker run -d --name postgres-container \
+-e POSTGRES_PASSWORD=devops_pass \
+-p 127.0.0.1:5432:5432 \
+ postgres
+```
+
+2. Create a new database named junior_db inside the container
+
+**Command:**
+```bash
+docker exec -it postgres-container psql -U postgres
+
+CREATE DATABASE junior_db;  # create databse 
+
+\l # for list database
+```
+**Output:**
+![task1](./Screenshots/8.png)
+
+
+3. Verify connectivity using psql from the host.
+
+**Command:**
+```bash
+# install PostgreSQL client 
+sudo apt install postgresql-client -y
+
+psql -h localhost -U postgres -d junior_db
+
+```
+
+**Output:** 
+![task1](./Screenshots/9.png)
 
