@@ -7,9 +7,15 @@
 **Command:**
 ```bash
 mkdir project
+
 mkdir project/src project/docs project/tests
-touch project/src/main.py project/docs/README.md project/tests/test_main.py 
+
+touch project/src/main.py project/docs/README.md project/tests/test_main.py
+ 
 echo "This is a sample DevOps project for testing automation." > project/docs/README.md
+
+cat project/docs/README.md
+
 tree project 
 ```
 
@@ -55,14 +61,14 @@ hostnamectl set-hostname devops-junior
 
 ### **Change Hostname `Reboot Required`**
 
-1. Open /etc/hostname and Change the Hostname
+ #### 1. Open /etc/hostname and Change the Hostname
 
 **Command:**
 ```bash
 sudo vim /etc/hostname
 ```
 
-2. Open /etc/hosts and Change the Hostname
+#### 2. Open /etc/hosts and Change the Hostname
 
 **Command:**
 ```bash
@@ -70,7 +76,7 @@ sudo vim /etc/hostname
 sudo vim/etc/hosts
 ```
 
-3. Reboot the System
+#### 3. Reboot the System
 
 **Command:**
 ```bash
@@ -139,12 +145,13 @@ echo "Backup of '$SOURCE_DIR' created at '$DEST_DIR/$BACKUP_NAME'"
 ![task1](./Screenshots/7.png)
 
 
+
 ## Task 5: Database Container Setup
 
 - `Objective`: Set up a containerized database with security.
 
 **Steps**
-1. Create PostgreSQL container bind to localhost only.
+### 1. Create PostgreSQL container bind to localhost only.
 
 **Command:**
 ```bash
@@ -154,7 +161,7 @@ docker run -d --name postgres-container \
  postgres
 ```
 
-2. Create a new database named junior_db inside the container
+### 2. Create a new database named junior_db inside the container
 
 **Command:**
 ```bash
@@ -168,17 +175,162 @@ CREATE DATABASE junior_db;  # create databse
 ![task1](./Screenshots/8.png)
 
 
-3. Verify connectivity using psql from the host.
+### 3. Verify connectivity using psql from the host.
 
 **Command:**
 ```bash
 # install PostgreSQL client 
+
 sudo apt install postgresql-client -y
 
 psql -h localhost -U postgres -d junior_db
-
 ```
 
 **Output:** 
 ![task1](./Screenshots/9.png)
+
+
+
+## Task 6: Advanced Security and Monitoring Configuration
+
+- `Objective`: Enhance server security and set up advanced monitoring.
+
+### Environment Setup
+- Ubuntu Server 22.04 in `VirtualBox VM`
+-  Specs: 2 vCPU, 2GB RAM, 20GB Disk
+-  Database: MySQL
+
+### Security best practices
+
+### 1. Disable Root SSH Login
+
+`Rationale`: The root account is the most targeted username for brute-force attacks. Disabling direct SSH login for root significantly reduces the attack surface. Forcing key-based authentication adds a layer of security far stronger than any password.
+
+- Open the ssh config file
+- Change `PermitRootLogin yes`  to `PermitRootLogin no`
+- Restart SSH
+
+**Command:**
+```bash
+sudo vim /etc/ssh/sshd_config
+
+# Change `PermitRootLogin yes`  to `PermitRootLogin no`
+
+sudo systemctl restart ssh
+```
+
+**Output:** 
+![task1](./Screenshots/10.png)
+
+**Verify** From another terminal, try to ssh:
+
+**Output:** 
+![task1](./Screenshots/11.png)
+
+
+### 2. Configure firewall rules with ufw 
+
+`Rationale`: A firewall acts as a gatekeeper for your server's network traffic. By default, all incoming connections should be denied. I explicitly allow only the necessary ports: 22 (SSH) and 3306 (MySQL) for database connections.
+
+- Enable UFW
+
+**Command:**
+```bash
+sudo ufw enable
+```
+
+- Allow only required ports `22 and 3306`
+  
+**Command:**
+```bash
+sudo ufw allow 22
+sudo ufw allow 3306 # MySQL
+```
+
+- Deny everything else
+  
+**Command:**
+```bash
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+```
+
+- **Verify**
+
+**Command:**
+```bash
+sudo ufw status
+```
+
+**Output:** 
+![task1](./Screenshots/12.png)
+
+
+### 3. Enforce Strong Password Policy & Secure MySQL
+
+`Rationale`: Weak passwords are a primary vector for compromise. Enforcing a strong policy makes brute-forcing passwords computationally infeasible. Additionally, running mysql_secure_installation removes insecure default settings.
+
+- I use PAM (Pluggable Authentication Module) to enforce rules
+
+**3.1 install password quality tools:**
+```bash
+sudo apt install libpam-pwquality
+```
+
+**3.2. Configure password policies**
+
+```bash
+sudo vim /etc/pam.d/common-password
+```
+**Output:** 
+![task1](./Screenshots/13.png)
+
+**3.3. Set or the user's password to test the policy: sudo passwd student_user**
+```bash
+sudo useradd student_user
+sudo passwd student_user
+# I try first to put week pass but it's not accept after that i walk with the roles i put in configure password policies file so it was accepted.
+```
+**Output:** 
+![task1](./Screenshots/14.png)
+
+
+### 4. Secure MySQL
+
+After installation, the MySQL server instance on my machine is insecure and susceptible to attacks. mysql_secure_installation is a shell script developed for securing the MySQL server installation on Unix systems. The script configures security settings and allows you to:
+
+- Set a password for root accounts (see how to reset or change MySQL root password)
+- Remove the root accounts accessible from outside the localhost.
+- Remove anonymous-user accounts.
+- Delete the test database, accessible by anonymous users.
+- Reload the user privileges tables.
+ 
+`Start the script:`
+```bash
+sudo mysql_secure_installation
+```
+
+**Output:** 
+![task1](./Screenshots/15.png)
+
+
+#### 4.1 Securing the student_user Account
+
+- Log in to the MySQL shell as root
+- Create the user with a strong password
+- Grant all privileges on a specific database
+- Restrict privileges 
+- Apply the changes and exit
+
+**Command**
+```bash
+sudo mysql -u root -p
+CREATE USER 'student_user2'@'localhost' IDENTIFIED BY 'Devops@123456';
+GRANT ALL PRIVILEGES ON school_db.* TO 'student_user2'@'localhost';
+SHOW GRANTS FOR 'student_user2'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+```
+**Output:** 
+![task1](./Screenshots/16.png)
 
