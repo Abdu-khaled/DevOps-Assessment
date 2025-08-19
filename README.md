@@ -27,7 +27,8 @@ tree project
 ## Task 2: Basic OS Configuration
 
 
-- **Objective**: Configure the hostname of the Linux machine.
+- **Objective**: Configure the hostname of the Linux machine. 
+  
 There are two way to change the hostname in the system one with `Reboot Required` two `No Reboot`
 
 ### Change Hostname `No Reboot`
@@ -78,3 +79,20 @@ sudo systemctl reboot
 
 **Output:**  
 ![task1](./Screenshots/4.png)
+
+
+## Task 3: Simple Container Run 
+
+- **Objective**: Run a basic web server container.
+
+**Command:**
+```bash
+docker run -d --name mynginx -p 8080:80  nginx 
+```
+
+**Output:**  
+![task1](./Screenshots/5.png)
+
+**Output:**  
+![task1](./Screenshots/6.png)
+
