@@ -200,9 +200,9 @@ psql -h localhost -U postgres -d junior_db
 -  Specs: 2 vCPU, 2GB RAM, 20GB Disk
 -  Database: MySQL
 
-### Security best practices
+### 1. Security best practices
 
-### 1. Disable Root SSH Login
+#### 1.1 Disable Root SSH Login
 
 `Rationale`: The root account is the most targeted username for brute-force attacks. Disabling direct SSH login for root significantly reduces the attack surface. Forcing key-based authentication adds a layer of security far stronger than any password.
 
@@ -228,7 +228,7 @@ sudo systemctl restart ssh
 ![task1](./Screenshots/11.png)
 
 
-### 2. Configure firewall rules with ufw 
+#### 1.2 Configure firewall rules with ufw 
 
 `Rationale`: A firewall acts as a gatekeeper for your server's network traffic. By default, all incoming connections should be denied. I explicitly allow only the necessary ports: 22 (SSH) and 3306 (MySQL) for database connections.
 
@@ -266,7 +266,7 @@ sudo ufw status
 ![task1](./Screenshots/12.png)
 
 
-### 3. Enforce Strong Password Policy & Secure MySQL
+### 1.3 Enforce Strong Password Policy & Secure MySQL
 
 `Rationale`: Weak passwords are a primary vector for compromise. Enforcing a strong policy makes brute-forcing passwords computationally infeasible. Additionally, running mysql_secure_installation removes insecure default settings.
 
@@ -295,7 +295,7 @@ sudo passwd student_user
 ![task1](./Screenshots/14.png)
 
 
-### 4. Secure MySQL Server
+### 2. Secure MySQL Server
 
 After installation, the MySQL server instance on my machine is insecure and susceptible to attacks. mysql_secure_installation is a shell script developed for securing the MySQL server installation on Unix systems. The script configures security settings and allows you to:
 
@@ -314,7 +314,7 @@ sudo mysql_secure_installation
 ![task1](./Screenshots/15.png)
 
 
-### 4.1 Securing the student_user Account
+#### 2.1 Securing the student_user Account
 
 - Log in to the MySQL shell as root
 - Create the user with a strong password
@@ -334,9 +334,9 @@ EXIT;
 **Output:** 
 ![task1](./Screenshots/16.png)
 
-### 4.2. Verification (Testing)
+#### 2.2. Verification (Testing)
 
-1.Test that the new student_user2 password works:
+**1. Test that the new student_user2 password works:**
 
 **Output:** 
 ![task1](./Screenshots/17.png)
@@ -348,5 +348,68 @@ EXIT;
 ![task1](./Screenshots/18.png)
 
 **It's work Alhamdulallah**
+
+
+### 3. Monitoring and Log Management
+
+`Rationale`: htop is an improved top, but glances provides a more comprehensive, color-coded, and web-based overview of the system's resources (CPU, RAM, disk I/O, network, processes) in real-time, making it superior for quick diagnostics.
+
+#### 3.1. Install and Configure Monitoring Tool (glances)
+
+**Command**
+```bash
+sudo apt install glances
+glances
+```
+**Verification**
+**Output:** 
+![task1](./Screenshots/19.png)
+
+
+### 4. Set Up Log Rotation with logrotate
+
+`Rationale`: Log files can grow endlessly, consuming disk space and making analysis difficult. logrotate automatically archives, compresses, and deletes old logs based on configured criteria (size, time), ensuring efficient log management.
+
+
+#### 4.1. Configure system logs
+
+**Command**
+```bash
+sudo vim /etc/logrotate.d/syslog
+```
+
+![task1](./Screenshots/20.png)
+
+#### 4.2. Configure MySQL logs
+
+**Command**
+```bash
+sudo vim /etc/logrotate.d/mysql
+```
+
+![task1](./Screenshots/21.png)
+
+#### 4.3. Ensure enable general and error logging
+
+```bash
+sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf
+```
+
+![task1](./Screenshots/22.png)
+
+
+#### 4.4. Verification
+
+
+```bash
+# Test the logrotate configuration for syntax errors
+sudo logrotate -d /etc/logrotate.d/mysql
+# Force a logrotate run to test the script
+sudo logrotate -vf /etc/logrotate.d/mysql
+# Check that the old log was compressed and a new one was created
+ls -la /var/log/mysql/
+```
+
+![task1](./Screenshots/23.png)
 
 
