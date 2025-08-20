@@ -161,6 +161,8 @@ docker run -d --name postgres-container \
  postgres
 ```
 
+**`-p 127.0.0.1:5432:5432`: This means the port will only be accessible locally on my machine (not from other devices in the network).**
+
 ### 2. Create a new database named junior_db inside the container
 
 **Command:**
@@ -197,7 +199,7 @@ psql -h localhost -U postgres -d junior_db
 
 ### Environment Setup
 - Ubuntu Server 22.04 in `VirtualBox VM`
--  Specs: 2 vCPU, 2GB RAM, 20GB Disk
+-  Specs: 2 vCPU, 4GB RAM, 20GB Disk
 -  Database: MySQL
 
 ### 1. Security best practices
@@ -259,7 +261,7 @@ sudo ufw default allow outgoing
 
 **Command:**
 ```bash
-sudo ufw status
+sudo ufw status verbose
 ```
 
 **Output:** 
