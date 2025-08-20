@@ -413,3 +413,26 @@ ls -la /var/log/mysql/
 ![task1](./Screenshots/23.png)
 
 
+### 5. Simulating and Monitoring a Security Breach
+
+- `Objective`: Generate failed SSH login attempts and observe the monitoring tool's reaction.
+
+
+![task1](./Screenshots/24.png)
+
+#### 5.1. Output in Terminal
+```bash
+sudo tail -f /var/log/auth.log
+```
+**Output:**  
+
+![task1](./Screenshots/25.png)
+
+#### 5.2. Output in glances
+![task1](./Screenshots/26.png)
+
+#### 5.2. Output in htop
+
+![task1](./Screenshots/27.png)
+
+
