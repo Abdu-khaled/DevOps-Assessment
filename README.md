@@ -347,7 +347,6 @@ EXIT;
 **Output:** 
 ![task1](./Screenshots/18.png)
 
-**It's work Alhamdulallah**
 
 
 ### 3. Monitoring and Log Management
